@@ -31,7 +31,7 @@
     delete from mmall_shipping
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.mmall.pojo.Shipping" >
+  <insert id="insert" parameterType="com.mmall.pojo.Shipping" useGeneratedKeys="true" keyColumn="id" >
     insert into mmall_shipping (id, user_id, receiver_name, 
       receiver_phone, receiver_mobile, receiver_province, 
       receiver_city, receiver_district, receiver_address, 
@@ -176,4 +176,27 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="selectByUserIdAndShippingId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_shipping
+    where id = #{shippingId}
+    and user_id = #{userId}
+  </select>
+
+  <delete id="deleteByShippingIdAndUserId" parameterType="map" >
+    delete from mmall_shipping
+    where id = #{shippingId}
+    and user_id = #{userId}
+  </delete>
+
+  <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_shipping
+    where user_id = #{userId}
+  </select>
+
+
 </mapper>

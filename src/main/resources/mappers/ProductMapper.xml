@@ -76,12 +76,8 @@
       <if test="status != null" >
         status,
       </if>
-      <if test="createTime != null" >
         create_time,
-      </if>
-      <if test="updateTime != null" >
         update_time,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -114,12 +110,8 @@
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        now(),
+        now(),
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.Product" >
@@ -155,9 +147,7 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
+        update_time = now(),
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -176,4 +166,36 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_product
+  </select>
+
+  <select id="searchList" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from mmall_product
+    <where>
+      <if test="productId != null">
+        and id = #{productId}
+      </if>
+      <if test="productName != null">
+        and name like #{productName}
+      </if>
+    </where>
+  </select>
+
+  <update id="setSaleStatus" parameterType="map">
+    update mmall_product
+    set status = #{status}
+    where id = #{productId}
+  </update>
+
+  <select id="checkProduct" parameterType="int" resultType="int">
+    select count(1)
+    from mmall_product
+    where id = #{id}
+  </select>
+
 </mapper>
